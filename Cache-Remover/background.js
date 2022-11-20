@@ -37,8 +37,6 @@ browser.browserAction.onClicked.addListener(() => {
   //gettingStoredSettings.then(forget, onError);
 });
 
-browser.webRequest.onBeforeRequest.addListener(
-  listener,
-  {urls: ["https://example.com/*"], types: ["main_frame"]},
-  ["blocking"]
-);
+browser.webRequest.onSendHeaders.addListener(() => {
+  console.log("Event");
+}, {urls: ["*://*/*"]})
