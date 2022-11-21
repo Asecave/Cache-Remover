@@ -1,6 +1,6 @@
 
 let defaultSettings = {
-  "websites": []
+  "websites": ["soundcloud"]
 };
 
 function onError(e) {
@@ -37,10 +37,27 @@ browser.browserAction.onClicked.addListener(() => {
   gettingStoredSettings.then(forget, onError);
 });
 
-
-async function update(activeInfo) {
-  t = await browser.tabs.query({active: true});
-  console.log(t[0].url);
+async function check(query) {
+  t = await browser.tabs.query(query);
+  for (let i = 0; i < t.length; i++) {
+    for (let j = 0; j < defaultSettings.websites.length; j++){
+      if (t[i].url.includes(defaultSettings.websites[j])){
+        forget();
+      }
+    }
+  }
 }
 
-browser.tabs.onActivated.addListener(update);
+browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
+  if (changeInfo.status === "loading") {
+    check({active: true});
+  }
+});
+
+browser.tabs.onActivated.addListener((activeInfo) => {
+  check({active: true});
+});
+
+browser.tabs.onRemoved.addListener((removeInfo) => {
+  check({currentWindow: true});
+});
