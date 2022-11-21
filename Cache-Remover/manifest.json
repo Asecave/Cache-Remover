@@ -23,6 +23,7 @@
 
   "permissions": [
     "browsingData",
-    "storage"
+    "storage",
+    "tabs"
   ]
 }

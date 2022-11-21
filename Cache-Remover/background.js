@@ -34,11 +34,13 @@ gettingStoredSettings.then(checkStoredSettings, onError);
 
 browser.browserAction.onClicked.addListener(() => {
   const gettingStoredSettings = browser.storage.local.get();
-  //gettingStoredSettings.then(forget, onError);
+  gettingStoredSettings.then(forget, onError);
 });
 
-browser.webRequest.onBeforeRequest.addListener(
-  listener,
-  {urls: ["https://example.com/*"], types: ["main_frame"]},
-  ["blocking"]
-);
+
+async function update(activeInfo) {
+  t = await browser.tabs.query({active: true});
+  console.log(t[0].url);
+}
+
+browser.tabs.onActivated.addListener(update);
